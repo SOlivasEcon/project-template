@@ -68,3 +68,4 @@ project-package = { path = ".", editable = true }
 build = "python -m SCons"
 clean = "python -m SCons -c"
 test = "python -m pytest"
+task-graph = "python -m SCons task_graph"

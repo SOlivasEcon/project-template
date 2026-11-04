@@ -1,0 +1,13 @@
+"""SConscript for task_graph: draw docs/task_graph.png from the tasks' SConscripts.
+
+Not part of the default build: run `pixi run task-graph` (or `python -m SCons task_graph`).
+"""
+
+Import("env")
+
+graph = env.Python(
+    target="#/docs/task_graph.png",
+    source=["scripts/draw_task_graph.py", "#/paper/generated_manifest.csv"]
+    + sorted(Glob("#/tasks/*/SConscript"), key=str),
+)
+env.Alias("task_graph", graph)
