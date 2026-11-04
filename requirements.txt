@@ -1,0 +1,19 @@
+# Fallback for machines without pixi. pixi (pyproject.toml + pixi.lock) is the main setup.
+# Versions match pixi.lock as of 2026-11-04 (Python 3.13).
+# Install with `python -m pip install -r requirements.txt`, then `python -m pip install -e .`.
+# Graphviz (task-graph image only) is not a pip package: install it separately.
+
+# Data and estimation
+pandas==3.1.1
+numpy==2.5.4
+statsmodels==0.15.0
+matplotlib==3.11.2
+python-dotenv==1.2.4       # loads .env in project_package/config.py
+
+# Build
+scons==4.11.1              # runs tasks/ in dependency order (python -m SCons)
+
+# Checks
+pytest==9.2.0
+pre-commit==4.7.0
+ruff==0.17.3

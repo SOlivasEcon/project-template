@@ -1,0 +1,49 @@
+# Default: let git detect text files and normalize their line endings
+* text=auto
+
+# Code: always LF, so Windows and macOS checkouts are identical
+*.py text eol=lf
+*.do text eol=lf
+*.ado text eol=lf
+*.R text eol=lf
+*.m text eol=lf
+*.jl text eol=lf
+*.sh text eol=lf
+SConstruct text eol=lf
+SConscript text eol=lf
+
+# LaTeX
+*.tex text eol=lf
+*.bib text eol=lf
+*.sty text eol=lf
+*.cls text eol=lf
+
+# Docs, data and config
+*.md text eol=lf
+*.csv text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.env.example text eol=lf
+LICENSE text eol=lf
+
+# pixi lock file: generated, never merged by hand
+pixi.lock text eol=lf merge=binary linguist-language=YAML linguist-generated=true
+
+# Binary files: no conversion
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.dta binary
+*.mat binary
+*.rds binary
+*.RData binary
+*.xlsx binary
+*.parquet binary
+*.gz binary
+*.zip binary

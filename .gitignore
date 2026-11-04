@@ -1,0 +1,63 @@
+# Secrets and per-machine settings
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# pixi environment (pixi.lock is tracked)
+.pixi/*
+!.pixi/config.toml
+
+# Editors (shared PyCharm run configurations live in .run/, which is tracked)
+.idea/
+.vscode/
+
+# R / Matlab
+.Rhistory
+.RData
+.Rproj.user/
+*.asv
+
+# OS
+.DS_Store
+Thumbs.db
+*.lnk
+
+# Images and PDFs: never tracked (figures live under OUTPUT_ROOT)
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Paper: figures are copied in by the publish task; generated tables (.tex) stay
+# tracked so changes show in git diff
+paper/generated/figures/
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.toc
+
+# SCons
+tasks/*/logs/
+.sconsign.dblite
+.sconf_temp/
+
+# Local-only
+.claude/settings.local.json
+scratch/
+docs/notes/

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project-package"
+version = "0.1.0"
+description = "Research project built from SOlivasEcon/project-template"
+requires-python = ">=3.13"
+# Dependencies are managed by pixi below (pixi.lock pins exact versions).
+# Without pixi: `python -m pip install -r requirements.txt`, then `python -m pip install -e .`.
+dependencies = []
+
+[tool.setuptools.packages.find]
+# Only the shared package is installable; tasks/ holds scripts, not importable modules.
+include = ["project_package*"]
+
+# ---------------------------------------------------------------------------
+# pixi: one environment for Windows, macOS (Apple silicon and Intel) and Linux
+# ---------------------------------------------------------------------------
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["win-64", "osx-arm64", "osx-64", "linux-64"]
+
+[tool.pixi.dependencies]
+python = "3.13.*"
+# Data and estimation
+pandas = ">=2.3"
+numpy = ">=2.3"
+statsmodels = ">=0.14"
+matplotlib = ">=3.10"
+python-dotenv = ">=1.1"   # loads .env in project_package/config.py
+# Build
+scons = ">=4.9"           # runs tasks/ in dependency order
+graphviz = ">=12"         # task-graph image only
+# Checks
+pytest = ">=8.4"
+pre-commit = ">=4"
+ruff = ">=0.14"
+
+[tool.pixi.pypi-dependencies]
+# The shared package, installed in editable mode so edits take effect immediately
+project-package = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+build = "python -m SCons"
+clean = "python -m SCons -c"
+test = "python -m pytest"
