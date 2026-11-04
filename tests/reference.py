@@ -44,7 +44,7 @@ def record(relative_paths: list[str]) -> None:
             sys.exit(f"{path} not found; run the build first")
         reference[relative] = digest(path)
         print(f"recorded {relative}")
-    REFERENCE_FILE.write_text(json.dumps(reference, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    REFERENCE_FILE.write_text(json.dumps(reference, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":

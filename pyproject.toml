@@ -25,6 +25,10 @@ extend-include = ["SConstruct", "**/SConscript"]
 # pycodestyle, pyflakes, import order, pyupgrade, bugbear
 select = ["E", "F", "W", "I", "UP", "B"]
 
+[tool.ruff.lint.isort]
+# tests/reference.py, imported by the tests as a local module
+known-local-folder = ["reference"]
+
 [tool.ruff.lint.per-file-ignores]
 # SCons provides Import, Export, Return, Glob, File, env, ... without imports
 "**/SConscript" = ["F821"]
