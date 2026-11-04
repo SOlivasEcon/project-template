@@ -1,0 +1,10 @@
+"""SConscript for example_julia: demo Julia task. Skipped when Julia is not found (JULIA_EXE in .env, or PATH)."""
+
+Import("env")
+
+if env.CheckProgram("julia"):
+    coefficients = env.Julia(
+        target=env.Out("coefficients.csv"),
+        source=["scripts/estimate_ols.jl", env.Upstream("01_example_clean", "panel.csv")],
+    )
+    env.Register(coefficients)

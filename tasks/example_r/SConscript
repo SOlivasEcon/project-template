@@ -1,0 +1,10 @@
+"""SConscript for example_r: demo R task. Skipped when Rscript is not found (R_EXE in .env, or PATH)."""
+
+Import("env")
+
+if env.CheckProgram("r"):
+    coefficients = env.R(
+        target=env.Out("coefficients.csv"),
+        source=["scripts/estimate_ols.R", env.Upstream("01_example_clean", "panel.csv")],
+    )
+    env.Register(coefficients)

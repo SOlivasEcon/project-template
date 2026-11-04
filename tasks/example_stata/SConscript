@@ -1,0 +1,10 @@
+"""SConscript for example_stata: demo Stata task. Skipped when Stata is not found (STATA_EXE in .env, or PATH)."""
+
+Import("env")
+
+if env.CheckProgram("stata"):
+    means = env.Stata(
+        target=env.Out("means_by_year.csv"),
+        source=["scripts/means_by_year.do", env.Upstream("01_example_clean", "panel.csv")],
+    )
+    env.Register(means)

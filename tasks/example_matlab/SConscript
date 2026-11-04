@@ -1,0 +1,10 @@
+"""SConscript for example_matlab: demo Matlab task. Skipped when Matlab is not found (MATLAB_EXE in .env, or PATH)."""
+
+Import("env")
+
+if env.CheckProgram("matlab"):
+    coefficients = env.Matlab(
+        target=env.Out("coefficients.csv"),
+        source=["scripts/estimate_ols.m", env.Upstream("01_example_clean", "panel.csv")],
+    )
+    env.Register(coefficients)

@@ -7,6 +7,7 @@ are read from the repo root.
 """
 
 import os
+import shutil
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -43,3 +44,25 @@ DATA_ROOT = optional_path("DATA_ROOT")
 
 # Optional folder shared with coauthors, which the publish task copies final results into.
 SHARED_OUTPUT_ROOT = optional_path("SHARED_OUTPUT_ROOT")
+
+# Programs for non-Python tasks: the `.env` variable that points to each, and the names tried on PATH otherwise.
+PROGRAMS = {
+    "stata": ("STATA_EXE", ["StataMP-64", "StataSE-64", "StataBE-64", "stata-mp", "stata-se", "stata"]),
+    "r": ("R_EXE", ["Rscript"]),
+    "matlab": ("MATLAB_EXE", ["matlab"]),
+    "julia": ("JULIA_EXE", ["julia"]),
+}
+
+
+def program_path(language: str) -> str | None:
+    """Return the executable for `language` ('stata', 'r', 'matlab', 'julia'), or None if it is not found.
+
+    Uses the `.env` variable when set (and fails if it points to a missing file), otherwise searches PATH.
+    """
+    variable, names = PROGRAMS[language]
+    path = optional_path(variable)
+    if path is not None:
+        if not path.is_file():
+            raise RuntimeError(f"{variable}={path} (from .env or the environment) is not a file.")
+        return str(path)
+    return next((found for name in names if (found := shutil.which(name))), None)
