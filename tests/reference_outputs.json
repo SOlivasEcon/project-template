@@ -1,0 +1,5 @@
+{
+  "00_example_raw/raw_panel.csv": "b5a8d0f1cdfc81fd6a0cfae551084a4346762c15e37647fcbede6c9999beb4c3",
+  "01_example_clean/panel.csv": "1fbb5ea79e7a35f8054bd4388000a9f37ade268febc16ce6ff89661d99f4cf60",
+  "02_example_analysis/table_production.tex": "1cc834289c8c073dfad81c37979835ff33550811db8b5f61d514028ff6ae8aa7"
+}
