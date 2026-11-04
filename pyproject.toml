@@ -15,6 +15,23 @@ dependencies = []
 # Only the shared package is installable; tasks/ holds scripts, not importable modules.
 include = ["project_package*"]
 
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+# SCons build files are Python too
+extend-include = ["SConstruct", "**/SConscript"]
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, import order, pyupgrade, bugbear
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# SCons provides Import, Export, Return, Glob, File, env, ... without imports
+"**/SConscript" = ["F821"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 # ---------------------------------------------------------------------------
 # pixi: one environment for Windows, macOS (Apple silicon and Intel) and Linux
 # ---------------------------------------------------------------------------

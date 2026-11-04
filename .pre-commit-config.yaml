@@ -1,0 +1,18 @@
+# Checks that run on every `git commit` once you run `pixi run pre-commit install` (once per clone).
+# Run them on all files by hand with `pixi run pre-commit run --all-files`.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files   # data and outputs belong in DATA_ROOT / OUTPUT_ROOT, not git
+        args: ["--maxkb=1000"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check                # Python style and common bugs (settings in pyproject.toml)
+        args: ["--fix"]
