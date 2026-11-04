@@ -10,12 +10,10 @@ SCons uses those declarations to decide what to rerun after a script or an input
 
 Builders: env.Python, env.Stata, env.R, env.Matlab, env.Julia. Each runs one script with the script's own folder
 as the working directory and writes everything it prints to tasks/<task>/logs/<script>.log, which is a target
-too (so `-c` removes it). Python scripts find their folders through `project_package.paths`; scripts in the other
-languages read these environment variables, set by the builder:
-    TASK_OUTPUT_DIR    OUTPUT_ROOT/tasks/<task>/, the task's own output folder (created before the run)
-    TASK_OUTPUT_ROOT   OUTPUT_ROOT/tasks/, to read other tasks' outputs
-    DATA_ROOT          the raw data folder (empty if not set)
-Stata, R, Matlab and Julia come from STATA_EXE, R_EXE, MATLAB_EXE and JULIA_EXE in `.env`, or from PATH.
+too (so `-c` removes it). Scripts find their folders themselves, from `.env`: Python through
+`project_package.paths`, the other languages through helpers/project_paths.* (see helpers/README.md). So a script
+runs the same through SCons and on its own. Stata, R, Matlab and Julia come from STATA_EXE, R_EXE, MATLAB_EXE and
+JULIA_EXE in `.env`, or from PATH.
 
 Layout and SCons design inspired by shihhsuanhsu/project-template
 (https://github.com/shihhsuanhsu/project-template).
@@ -29,11 +27,17 @@ import sys
 
 from SCons.Script import Action, Builder, Default, Environment, Glob, SConscript
 
-from project_package.config import DATA_ROOT, PROGRAMS, TASK_OUTPUT_ROOT, program_path, required_path
+from project_package.config import PROGRAMS, program_path, required_path
 from project_package.paths import task_output_dir
 
-# Files of the shared package that every script imports; each script's build depends on them.
+# Files every script relies on to find its folders; each script's build depends on them.
 SHARED_SOURCES = ["#/project_package/__init__.py", "#/project_package/config.py", "#/project_package/paths.py"]
+HELPERS = {
+    "stata": "#/helpers/project_paths.do",
+    "r": "#/helpers/project_paths.R",
+    "matlab": "#/helpers/project_paths.m",
+    "julia": "#/helpers/project_paths.jl",
+}
 
 # Language name (as in project_package.config.PROGRAMS) -> name shown in messages.
 LANGUAGES = {"python": "Python", "stata": "Stata", "r": "R", "matlab": "Matlab", "julia": "Julia"}
@@ -87,17 +91,8 @@ def run_script(target, source, env, language):
         print(f"*** {LANGUAGES[language]} not found: set {PROGRAMS[language][0]} in .env (see .env.example).")
         return 1
 
-    out_dir = task_output_dir(script.dir.up().name)
-    out_dir.mkdir(parents=True, exist_ok=True)
     os.makedirs(os.path.dirname(log), exist_ok=True)
-    child_env = {
-        **os.environ,
-        "MPLBACKEND": "Agg",
-        "PYTHONIOENCODING": "utf-8",
-        "TASK_OUTPUT_DIR": str(out_dir),
-        "TASK_OUTPUT_ROOT": str(TASK_OUTPUT_ROOT),
-        "DATA_ROOT": str(DATA_ROOT or ""),
-    }
+    child_env = {**os.environ, "MPLBACKEND": "Agg", "PYTHONIOENCODING": "utf-8"}
     with open(log, "w", encoding="utf-8") as f:
         code = subprocess.run(
             command_for(language, executable, script.name),
@@ -112,17 +107,21 @@ def run_script(target, source, env, language):
     return code
 
 
-def add_log_and_shared(target, source, env):
-    """Add the script's log as a target and the shared package files as sources."""
-    return list(target) + [log_node(source[0])], list(source) + [env.File(s) for s in SHARED_SOURCES]
-
-
 def make_builder(language):
-    """Builder that runs a script in `language`; prints e.g. 'stata tasks/x/scripts/y.do' when it runs."""
+    """Builder that runs a script in `language`; prints e.g. 'stata tasks/x/scripts/y.do' when it runs.
+
+    Adds the script's log as a target, and the shared package files (plus the language's paths helper)
+    as sources.
+    """
+    shared = SHARED_SOURCES + ([HELPERS[language]] if language in HELPERS else [])
+
     def action(target, source, env):
         return run_script(target, source, env, language)
 
-    return Builder(action=Action(action, f"{language} $SOURCE"), emitter=add_log_and_shared)
+    def emitter(target, source, env):
+        return list(target) + [log_node(source[0])], list(source) + [env.File(s) for s in shared]
+
+    return Builder(action=Action(action, f"{language} $SOURCE"), emitter=emitter)
 
 
 # tools=[]: no compiler detection, which is slow on Windows and not needed here.
