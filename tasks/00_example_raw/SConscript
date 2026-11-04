@@ -1,0 +1,9 @@
+"""SConscript for 00_example_raw: simulate the toy raw panel. Its only input is the script itself."""
+
+Import("env")
+
+raw = env.Python(
+    target=env.Out("raw_panel.csv"),
+    source=["scripts/simulate_raw.py"],
+)
+env.Register(raw)

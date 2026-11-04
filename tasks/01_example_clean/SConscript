@@ -1,0 +1,9 @@
+"""SConscript for 01_example_clean: drop bad rows from the toy panel and add logs."""
+
+Import("env")
+
+panel = env.Python(
+    target=env.Out("panel.csv"),
+    source=["scripts/clean_panel.py", env.Upstream("00_example_raw", "raw_panel.csv")],
+)
+env.Register(panel)
