@@ -1,0 +1,4 @@
+# latexmk settings for paper/ (read when latexmk runs in this folder).
+# `latexmk` builds main.tex; `latexmk -c` removes the build files, keeping the PDF.
+$pdf_mode = 1;
+@default_files = ('main.tex');

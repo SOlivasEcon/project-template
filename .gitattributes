@@ -30,6 +30,7 @@ SConscript text eol=lf
 .gitattributes text eol=lf
 .env.example text eol=lf
 LICENSE text eol=lf
+latexmkrc text eol=lf
 
 # pixi lock file: generated, never merged by hand
 pixi.lock text eol=lf merge=binary linguist-language=YAML linguist-generated=true

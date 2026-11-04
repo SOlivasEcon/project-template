@@ -1,0 +1,32 @@
+"""SConscript for publish: copy the paper's inputs into paper/generated/ and check the documents' references.
+
+The targets live outside the task folder (paper/generated/). They are marked NoClean and Precious: generated
+tables are tracked by git, so `python -m SCons -c` or a rebuild must never delete them first.
+"""
+
+import csv
+import hashlib
+
+Import("env")
+
+manifest = "#/paper/generated_manifest.csv"
+# Same documents as publish.py checks: every .tex file in paper/ and paper/slides/. They are tracked through a
+# hash of their text rather than as sources: SCons would scan their \input lines and see the generated tables
+# (the targets) as dependencies of themselves.
+documents = sorted(Glob("#/paper/*.tex"), key=str) + sorted(Glob("#/paper/slides/*.tex"), key=str)
+documents_hash = hashlib.sha256(b"".join(d.srcnode().get_contents() for d in documents)).hexdigest()
+
+with open(File(manifest).srcnode().abspath, newline="", encoding="utf-8") as f:
+    rows = list(csv.DictReader(f))
+
+# `source` is "<task>/<file>" under OUTPUT_ROOT/tasks/.
+sources = [env.Upstream(*row["source"].split("/", 1)) for row in rows]
+targets = ["#/paper/generated/" + row["generated_path"] for row in rows]
+
+published = env.Python(
+    target=targets,
+    source=["scripts/publish.py", manifest, env.Value(documents_hash)] + sources,
+)
+env.NoClean(published)
+env.Precious(published)
+env.Register(published)

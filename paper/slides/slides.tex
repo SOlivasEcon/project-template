@@ -1,0 +1,32 @@
+% Slides. Compile from this folder with `latexmk -pdf slides.tex`.
+% Figures and tables come from paper/generated/, which the publish task fills (`pixi run build`).
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{booktabs}
+\usepackage[authoryear,round]{natbib}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}[frame number]
+\graphicspath{{../generated/figures/}}
+
+\title{Project Title}
+\author{Author Name}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Production function estimates}
+  \centering
+  \input{../generated/tables/table_production}
+\end{frame}
+
+\begin{frame}{Output and labor}
+  \centering
+  \includegraphics[height=0.75\textheight]{fig_output_labor}
+\end{frame}
+
+\end{document}

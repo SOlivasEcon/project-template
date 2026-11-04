@@ -1,0 +1,60 @@
+% Paper. Compile from this folder with `latexmk` (settings in latexmkrc).
+% Figures and tables come from paper/generated/, which the publish task fills (`pixi run build`);
+% never edit files there by hand.
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup[table]{position=top}  % space between a table's caption and the table below it
+\usepackage{graphicx}
+\usepackage[authoryear,round]{natbib}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\graphicspath{{generated/figures/}}
+
+\title{Project Title}
+\author{Author Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+One paragraph summarizing the question, the approach and the main result.
+\end{abstract}
+
+\section{Introduction}
+
+The demo tasks simulate a panel of firms whose output follows a Cobb-Douglas production function
+\citep{CobbDouglas1928},
+\begin{equation}
+  \log Y_{it} = \alpha_i + \beta_K \log K_{it} + \beta_L \log L_{it} + \varepsilon_{it},
+\end{equation}
+with $\beta_K = 0.35$ and $\beta_L = 0.6$. Table~\ref{tab:production} reports the estimates and
+Figure~\ref{fig:output_labor} plots log output against log labor.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Production function estimates}
+  \label{tab:production}
+  \input{generated/tables/table_production}
+  \par\medskip
+  \begin{minipage}{0.7\linewidth}
+    \footnotesize Standard errors clustered by firm in parentheses.
+  \end{minipage}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\linewidth]{fig_output_labor}
+  \caption{Log output and log labor, with the OLS line}
+  \label{fig:output_labor}
+\end{figure}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

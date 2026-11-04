@@ -1,0 +1,3 @@
+kind,source,generated_path,producing_script,used_by
+figure,02_example_analysis/fig_output_labor.png,figures/fig_output_labor.png,tasks/02_example_analysis/scripts/estimate.py,main.tex slides/slides.tex
+table,02_example_analysis/table_production.tex,tables/table_production.tex,tasks/02_example_analysis/scripts/estimate.py,main.tex slides/slides.tex
