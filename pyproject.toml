@@ -51,6 +51,9 @@ pandas = ">=2.3"
 numpy = ">=2.3"
 statsmodels = ">=0.14"
 matplotlib = ">=3.10"
+# Linear algebra through OpenBLAS, not Intel MKL: MKL loads DLLs at run time that Windows finds only inside
+# `pixi run`, so numpy crashed when PyCharm (or a plain terminal) started the environment's python.exe directly.
+libblas = { version = "*", build = "*openblas" }
 python-dotenv = ">=1.1"   # loads .env in project_package/config.py
 # Build
 scons = ">=4.9"           # runs tasks/ in dependency order
