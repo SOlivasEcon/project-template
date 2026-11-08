@@ -1,10 +1,12 @@
-# Builds the project from scratch and runs the tests on Windows and macOS, on every push and pull request.
+# Builds the project from scratch and runs the tests on Windows and macOS.
 # Python, R and Julia tasks run; Stata and Matlab need licenses, so their tasks are skipped here.
+#
+# Runs only when you ask: GitHub > Actions > CI > "Run workflow". On a private repo each run uses about 75 of the
+# monthly free Actions minutes (macOS minutes count 10x). To run it on every push and pull request instead, add
+# `push:` and `pull_request:` lines under `on:` below.
 name: CI
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 jobs:
