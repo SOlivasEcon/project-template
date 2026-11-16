@@ -55,6 +55,12 @@ def dot_source(tasks: dict[str, dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render(dot: str, source: str) -> subprocess.CompletedProcess:
+    """Run `dot` to turn the DOT source into OUTPUT."""
+    command = [dot, "-Tpng", "-Gdpi=150", "-o", str(OUTPUT)]
+    return subprocess.run(command, input=source, text=True, capture_output=True, check=False)
+
+
 def main() -> None:
     dot = shutil.which("dot")
     if dot is None:
@@ -62,7 +68,15 @@ def main() -> None:
     source = dot_source(read_tasks())
     print(source)
     OUTPUT.parent.mkdir(exist_ok=True)
-    subprocess.run([dot, "-Tpng", "-Gdpi=150", "-o", str(OUTPUT)], input=source, text=True, check=True)
+    result = render(dot, source)
+    if result.returncode != 0:
+        # Graphviz from conda-forge registers its output formats (png, ...) in an install step that pixi skips;
+        # `dot -c` does that registration, then try again.
+        print(f"dot failed:\n{result.stderr}\nRegistering Graphviz plugins (dot -c) and retrying.")
+        subprocess.run([dot, "-c"], check=False)
+        result = render(dot, source)
+    if result.returncode != 0:
+        sys.exit(f"dot failed:\n{result.stderr}")
     print(f"Wrote {OUTPUT}")
 
 

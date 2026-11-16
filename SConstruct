@@ -92,7 +92,15 @@ def run_script(target, source, env, language):
         return 1
 
     os.makedirs(os.path.dirname(log), exist_ok=True)
-    child_env = {**os.environ, "MPLBACKEND": "Agg", "PYTHONIOENCODING": "utf-8"}
+    # Python: write figures without a window, print in order (unbuffered), and on a hard crash write the Python
+    # traceback to the log (faulthandler) instead of exiting silently.
+    child_env = {
+        **os.environ,
+        "MPLBACKEND": "Agg",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONFAULTHANDLER": "1",
+    }
     with open(log, "w", encoding="utf-8") as f:
         code = subprocess.run(
             command_for(language, executable, script.name),
