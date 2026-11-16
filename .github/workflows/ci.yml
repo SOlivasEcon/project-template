@@ -38,13 +38,6 @@ jobs:
       - name: Write .env
         run: echo "OUTPUT_ROOT=${{ runner.temp }}/output" > .env
 
-      - name: Linear algebra check
-        # Diagnostic: shows which OpenBLAS CPU kernel is used and whether a plain SVD works on this machine
-        run: pixi run python -X faulthandler -c "import numpy as np; print(np.linalg.svd(np.random.rand(500, 3))[1])"
-        env:
-          OPENBLAS_VERBOSE: "2"
-        continue-on-error: true
-
       - name: Build
         run: pixi run build
 
