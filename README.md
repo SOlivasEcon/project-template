@@ -7,8 +7,8 @@ needed. One command rebuilds every result from the raw data, in the right order,
   files the scripts read and write.
 - **[SCons](https://scons.org)** reads those files and runs the tasks in dependency order.
 - **[pixi](https://pixi.sh)** installs the same Python, packages and tools on Windows, macOS and Linux.
-- **Data and outputs stay outside the repo**, in folders you choose per machine (`.env`): local, OneDrive, Dropbox
-  or Box. Git tracks code, the paper and its tables, never data or images.
+- **Data and outputs stay outside the repo**, in folders you choose per machine (`.env`): raw data can sit in a
+  shared cloud folder; outputs go to a local folder. Git tracks code, the paper and its tables, never data or images.
 - **The paper** (`paper/`) is LaTeX; a `publish` task copies the figures and tables it uses into
   `paper/generated/`.
 
